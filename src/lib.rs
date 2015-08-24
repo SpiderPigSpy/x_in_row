@@ -39,6 +39,10 @@ impl Game {
         self.current_turn = self.current_turn.next();
         Ok(())
     }
+    
+    pub fn current_state(&self) -> &[Option<Player>; WIDTH * HEIGHT] {
+        &self.field.cells
+    }
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -227,8 +231,8 @@ impl<'a> Columns<'a> {
     
     fn index(field: &'a [Option<Player>; WIDTH * HEIGHT], index: usize) -> Columns<'a> {
         Columns {
-		    field: field,
-			current_column: index,
+            field: field,
+            current_column: index,
 		}
     }
 }
