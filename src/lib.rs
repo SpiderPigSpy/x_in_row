@@ -31,6 +31,10 @@ impl Game {
         self.winner
     }
     
+    pub fn is_full(&self) -> bool {
+        self.turns as usize == WIDTH * HEIGHT
+    }
+    
     pub fn make_turn(&mut self, column: usize) -> Result<(), GameError> {
         if self.winner.is_some() { return Err(GameError::AlreadyEnded); }
         try!(self.field.throw_token(column, self.current_turn));
