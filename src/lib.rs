@@ -323,7 +323,7 @@ fn test_diagonal_win() {
     println!("{:?}", &game.field.cells);
     game.make_turn(1).unwrap();
     println!("{:?}", &game.field.cells);
-    assert_eq!(game.win_check(), Some(Player::Red) );
+    assert_eq!(game.winner(), Some(Player::Red) );
     assert_eq!(game.make_turn(0), Err(GameError::AlreadyEnded) );
 }
 
@@ -338,7 +338,7 @@ fn test_row_win() {
     println!("{:?}", &game.field.cells);
     game.make_turn(1).unwrap();
     println!("{:?}", &game.field.cells);
-    assert_eq!(game.win_check(), Some(Player::Red) );
+    assert_eq!(game.winner(), Some(Player::Red) );
     assert_eq!(game.make_turn(0), Err(GameError::AlreadyEnded) );
 }
 
@@ -352,7 +352,7 @@ fn test_column_win() {
     println!("{:?}", &game.field.cells);
     game.make_turn(0).unwrap();
     println!("{:?}", &game.field.cells);
-    assert_eq!(game.win_check(), Some(Player::Red) );
+    assert_eq!(game.winner(), Some(Player::Red) );
     assert_eq!(game.make_turn(0), Err(GameError::AlreadyEnded) );
 }
 
