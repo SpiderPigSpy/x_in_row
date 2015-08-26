@@ -47,6 +47,14 @@ impl Game {
     pub fn current_state(&self) -> &[Option<Player>; WIDTH * HEIGHT] {
         &self.field.cells
     }
+    
+    pub fn possible_moves(&self) -> Vec<usize> {
+        if !self.is_full() {
+            self.field.possible_moves()
+        } else {
+            Vec::new()
+        }
+    }
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -71,19 +79,13 @@ impl Player {
     }
 }
 
-pub struct Field {
+struct Field {
     cells: [Option<Player>; WIDTH * HEIGHT],
 }
 
 impl Field {
     
-    pub fn with_cells(cells: [Option<Player>; WIDTH * HEIGHT]) -> Field {
-        Field {
-            cells: cells,
-        }
-    }
-    
-    pub fn free_columns(&self) -> Option<Vec<usize>> {
+    fn possible_moves(&self) -> Vec<usize> {
         let mut res = Vec::new();
         
         for (index, Column { cells }) in self.columns().enumerate() {
@@ -92,7 +94,7 @@ impl Field {
             }
         }
         
-        if res.is_empty() { None } else { Some(res) }
+        res
     }
     
     fn new() -> Field {
@@ -207,13 +209,6 @@ impl<'a> Rows<'a> {
 		    current_row: 0,
 		}
     }
-    
-    fn index(field: &'a [Option<Player>; WIDTH * HEIGHT], index: usize) -> Rows<'a> {
-        Rows {
-		    field: field,
-		    current_row: index,
-		}
-    }
 }
 
 impl<'a> Iterator for Rows<'a> {
@@ -311,6 +306,23 @@ impl<'a> Iterator for Diagonals<'a> {
 struct Diagonal {
     cells: [Option<Player>; WIDTH + HEIGHT],
     length: usize,
+}
+
+#[test]
+fn test_possible_moves() {
+    let mut game = Game::new();
+    assert_eq!(game.possible_moves(), vec![0, 1, 2, 3]);
+    game.make_turn(0).unwrap();
+    game.make_turn(0).unwrap();
+    game.make_turn(0).unwrap();
+    assert_eq!(game.possible_moves(), vec![1, 2, 3]);
+    game.make_turn(2).unwrap();
+    game.make_turn(2).unwrap();
+    game.make_turn(2).unwrap();
+    assert_eq!(game.possible_moves(), vec![1, 3]);
+    game.make_turn(3).unwrap();
+    game.make_turn(1).unwrap();
+    assert_eq!(game.possible_moves(), vec![1, 3]);
 }
 
 #[test]
