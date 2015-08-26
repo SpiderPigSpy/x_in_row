@@ -67,11 +67,30 @@ impl Player {
     }
 }
 
-struct Field {
+pub struct Field {
     cells: [Option<Player>; WIDTH * HEIGHT],
 }
 
 impl Field {
+    
+    pub fn with_cells(cells: [Option<Player>; WIDTH * HEIGHT]) -> Field {
+        Field {
+            cells: cells,
+        }
+    }
+    
+    pub fn free_columns(&self) -> Option<Vec<usize>> {
+        let mut res = Vec::new();
+        
+        for (index, Column { cells }) in self.columns().enumerate() {
+            if cells.iter().any(|x| x.is_none()) {
+                res.push(index);
+            }
+        }
+        
+        if res.is_empty() { None } else { Some(res) }
+    }
+    
     fn new() -> Field {
         Field {
 		    cells: [None; (WIDTH * HEIGHT) as usize],
